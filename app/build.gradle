@@ -36,6 +36,9 @@ dependencies {
 
     compile "org.jsoup:jsoup:${jsoupVersion}"
 
+    compile("com.afollestad.material-dialogs:core:${materialDialogVersion}") {
+        transitive = true
+    }
 
     //rxjava and rxandroid
     compile "io.reactivex:rxandroid:${rxAndroidVersion}"
