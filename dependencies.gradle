@@ -25,4 +25,6 @@ ext{
     dexMakerVersion = "1.2"
     rxVolleyVersion = "1.1.4"
     jsoupVersion = "1.10.1"
+    circleImageVersion = "2.1.0"
+    glideVersion = "3.7.0"
 }

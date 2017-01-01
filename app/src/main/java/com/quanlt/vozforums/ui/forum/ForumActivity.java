@@ -1,5 +1,6 @@
 package com.quanlt.vozforums.ui.forum;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
@@ -7,6 +8,7 @@ import com.quanlt.vozforums.R;
 import com.quanlt.vozforums.data.model.VozForum;
 import com.quanlt.vozforums.data.model.VozThread;
 import com.quanlt.vozforums.ui.base.BaseActivity;
+import com.quanlt.vozforums.ui.thread.ThreadActivity;
 import com.quanlt.vozforums.utils.Constants;
 
 public class ForumActivity extends BaseActivity implements ForumFragment.ForumItemListener {
@@ -35,7 +37,9 @@ public class ForumActivity extends BaseActivity implements ForumFragment.ForumIt
 
     @Override
     public void onThreadClick(VozThread clickedThread) {
-
+        Intent intent = new Intent(this, ThreadActivity.class);
+        intent.putExtra(ThreadActivity.EXTRA_THREAD, clickedThread);
+        startActivity(intent);
     }
 
     @Override

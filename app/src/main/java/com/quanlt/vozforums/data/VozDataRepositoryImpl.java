@@ -133,7 +133,7 @@ public class VozDataRepositoryImpl implements VozDataRepository {
             VozThread thread = new VozThread();
             thread.setTitle(element.select("a[id^=thread_title]").text());
             thread.setContent(element.select("td[id^=td_threadtitle]").attr("title"));
-            thread.setHref(element.select("a[id^=thread_title]").attr("href"));
+            thread.setHref(Constants.BASE_URL + element.select("a[id^=thread_title]").attr("href"));
             thread.setSticky(element.select("a[id^=thread_title]").hasClass("vozsticky"));
             VozUser user = new VozUser();
             user.setUsername(element.select("td[id^=td_threadtitle] > div.smallfont").text());
@@ -153,7 +153,7 @@ public class VozDataRepositoryImpl implements VozDataRepository {
                     .previousElementSibling().text()));
             VozPost lastPost = new VozPost();
             Elements lastPostElement = element.select("td > div:has(span.time)");
-            if (!lastPostElement.isEmpty()){
+            if (!lastPostElement.isEmpty()) {
                 lastPost.setDate(lastPostElement.text().substring(0, lastPostElement.text()
                         .indexOf("by")));
                 VozUser lastPostAuthor = new VozUser();

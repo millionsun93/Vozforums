@@ -3,6 +3,7 @@ package com.quanlt.vozforums.di.component;
 import com.quanlt.vozforums.di.PerActivity;
 import com.quanlt.vozforums.di.module.ActivityModule;
 import com.quanlt.vozforums.ui.forum.ForumFragment;
+import com.quanlt.vozforums.ui.thread.ThreadFragment;
 
 import dagger.Component;
 
@@ -15,4 +16,6 @@ import dagger.Component;
 public interface ActivityComponent {
 
     void inject(ForumFragment forumFragment);
+
+    void inject(ThreadFragment threadFragment);
 }

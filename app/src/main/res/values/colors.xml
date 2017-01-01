@@ -6,4 +6,5 @@
     <color name="userNameColor">#7723ec</color>
     <color name="threadContentColor">#a3a3a3</color>
     <color name="threadTitleColor">#000000</color>
+    <color name="grey">#878787</color>
 </resources>
