@@ -3,4 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="userNameColor">#7723ec</color>
+    <color name="threadContentColor">#a3a3a3</color>
+    <color name="threadTitleColor">#000000</color>
 </resources>

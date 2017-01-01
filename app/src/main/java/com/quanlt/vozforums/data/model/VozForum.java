@@ -16,6 +16,11 @@ public class VozForum extends VozBase {
     private String threadCount;
     private String postCount;
     private List<VozBase> pages;
+    private String nextPage;
+
+    public VozForum(String title, String href) {
+        super(title, href);
+    }
 
     public List<VozForum> getForums() {
         return forums;
@@ -65,6 +70,14 @@ public class VozForum extends VozBase {
         this.pages = pages;
     }
 
+    public String getNextPage() {
+        return nextPage;
+    }
+
+    public void setNextPage(String nextPage) {
+        this.nextPage = nextPage;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -79,6 +92,7 @@ public class VozForum extends VozBase {
         dest.writeString(this.threadCount);
         dest.writeString(this.postCount);
         dest.writeTypedList(this.pages);
+        dest.writeString(this.nextPage);
     }
 
     public VozForum() {
@@ -95,6 +109,7 @@ public class VozForum extends VozBase {
         this.threadCount = in.readString();
         this.postCount = in.readString();
         this.pages = in.createTypedArrayList(VozBase.CREATOR);
+        this.nextPage = in.readString();
     }
 
     public static final Creator<VozForum> CREATOR = new Creator<VozForum>() {

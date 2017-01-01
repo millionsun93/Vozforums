@@ -22,7 +22,7 @@ public class VozPost extends VozBase {
     }
 
     public String getDate() {
-        return date;
+        return date == null ? "" : date;
     }
 
     public void setDate(String date) {

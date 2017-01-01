@@ -100,6 +100,7 @@ public class VozDataRepositoryTest {
         assertTrue(forums.size() == 1);
         assertTrue(forums.get(0).getForums().size() == 0);
         assertTrue(forums.get(0).getThreads().size() == 25);
+        assertTrue(forums.get(0).getNextPage() != null);
     }
 
     @Test

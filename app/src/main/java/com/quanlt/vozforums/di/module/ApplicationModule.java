@@ -40,13 +40,13 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    VozRemoteDataSource provideRemoteDataSource() {
+    protected VozRemoteDataSource provideRemoteDataSource() {
         return new VozRemoteDataSourceImpl();
     }
 
     @Provides
     @Singleton
-    VozDataRepository provideVozDataRepository(VozRemoteDataSource remoteDataSource) {
+    protected VozDataRepository provideVozDataRepository(VozRemoteDataSource remoteDataSource) {
         return new VozDataRepositoryImpl(remoteDataSource);
     }
 

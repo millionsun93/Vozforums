@@ -5,6 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+
 /**
  * Created by TOIDV on 4/5/2016.
  */
@@ -26,10 +27,13 @@ public class InnovatubeUtils {
     }
 
 
-
     public static boolean isConnectivityAvailable(Context context) {
         ConnectivityManager conn = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = conn.getActiveNetworkInfo();
         return info != null && info.isAvailable() && info.isConnectedOrConnecting();
+    }
+
+    public static boolean isEmpty(String string) {
+        return string == null || string.length() == 0;
     }
 }

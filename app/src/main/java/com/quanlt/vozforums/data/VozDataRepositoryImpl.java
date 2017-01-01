@@ -37,19 +37,20 @@ public class VozDataRepositoryImpl implements VozDataRepository {
     @Override
     public Observable<VozForum> getForum(String path) {
         return mRemoteDataSource.get(path)
-                .map(data -> convertForums(data));
+                .map(data -> convertForums(data, path));
     }
 
     @Override
     public Observable<VozThread> getThread(String path) {
         return mRemoteDataSource.get(path)
-                .map(data -> convertThread(data));
+                .map(data -> convertThread(data, path));
     }
 
-    private VozThread convertThread(String data) {
+    private VozThread convertThread(String data, String path) {
         Document doc = Jsoup.parse(data, Constants.BASE_URL);
         VozThread thread = new VozThread();
         thread.setTitle(doc.title());
+        thread.setHref(path);
         Elements elements = doc.select("table[id^=post]");
         for (Element element : elements) {
             VozPost post = new VozPost();
@@ -62,7 +63,8 @@ public class VozDataRepositoryImpl implements VozDataRepository {
             user.setUsername(element.select("a.bigusername").text());
             user.setHref(element.select("a.bigusername").attr("href"));
             user.setOnline(
-                    element.select("img.inlineimg[src^=images/statusicon/user]").attr("src").contains("online"));
+                    element.select("img.inlineimg[src^=images/statusicon/user]").attr("src")
+                            .contains("online"));
             String userTitle = element.select("td>div.smallfont").get(0).text();
             if (userTitle.contains("deleted")) {
                 post.setDeleted(true);
@@ -85,20 +87,23 @@ public class VozDataRepositoryImpl implements VozDataRepository {
                 user.setHref(element.select("a[hr=member.php]").attr("href"));
                 user.setUsername(element.select("a[href^=member.php]").text());
                 if (element.select("a[href^=member.php] > img") != null)
-                    user.setAvatar(Constants.BASE_URL + element.select("a[href^=member.php] > img").attr("src"));
+                    user.setAvatar(Constants.BASE_URL + element.select("a[href^=member.php] > img")
+                            .attr("src"));
             }
 
             post.setAuthor(user);
             if (element.select("div[id^=post_message]") != null) {
-                post.setContent(element.select("div[id^=post_message]").html());
+                post.setContent(element.select("div[id^=post_message]").html().trim());
             }
             thread.getPosts().add(post);
         }
 
-        Elements pageElements = doc.select("div.pagenav > table > tbody > tr > td[class~=(alt1|alt2)]");
+        Elements pageElements = doc.select("div.pagenav > table > tbody > tr >" +
+                " td[class~=(alt1|alt2)]");
         for (int i = 0; i < pageElements.size() / 2; i++) {
             if (pageElements.get(i).className().equals("alt1")) {
-                thread.getPages().add(new VozBase(pageElements.get(i).child(0).text(), pageElements.get(i).child(0).attr("href")));
+                thread.getPages().add(new VozBase(pageElements.get(i).child(0).text(),
+                        pageElements.get(i).child(0).attr("href")));
             } else {
                 thread.getPages().add(new VozBase(pageElements.get(i).child(0).text()));
             }
@@ -106,15 +111,16 @@ public class VozDataRepositoryImpl implements VozDataRepository {
         return thread;
     }
 
-    private VozForum convertForums(String source) {
+    private VozForum convertForums(String source, String path) {
         VozForum forum = new VozForum();
         Document doc = Jsoup.parse(source, Constants.BASE_URL);
         forum.setTitle(doc.title());
+        forum.setHref(path);
         // sub forum
         Elements subForumNode = doc.select("td[id~=f+[0-9]]");
         for (Element element : subForumNode) {
             VozForum subForum = new VozForum();
-            subForum.setHref(element.select("a").attr("href"));
+            subForum.setHref(Constants.BASE_URL + element.select("a").attr("href"));
             subForum.setTitle(element.select("a").text());
             Element lastPostElement = element.nextElementSibling();
             VozUser author = new VozUser();
@@ -131,7 +137,8 @@ public class VozDataRepositoryImpl implements VozDataRepository {
             thread.setSticky(element.select("a[id^=thread_title]").hasClass("vozsticky"));
             VozUser user = new VozUser();
             user.setUsername(element.select("td[id^=td_threadtitle] > div.smallfont").text());
-            String userUrl = element.select("td[id^=td_threadtitle] > div.smallfont > span").attr("onclick");
+            String userUrl = element.select("td[id^=td_threadtitle] > div.smallfont > span")
+                    .attr("onclick");
             Pattern pattern = Pattern.compile("'(.*?)'");
             Matcher matcher = pattern.matcher(userUrl);
             if (matcher.find()) {
@@ -142,16 +149,22 @@ public class VozDataRepositoryImpl implements VozDataRepository {
                 continue;
             }
             thread.setViewsCount(shortenLargeNumber(element.select("td:last-child").text()));
-            thread.setRepliesCount(shortenLargeNumber(element.select("td:last-child").get(0).previousElementSibling().text()));
+            thread.setRepliesCount(shortenLargeNumber(element.select("td:last-child").get(0)
+                    .previousElementSibling().text()));
             VozPost lastPost = new VozPost();
             Elements lastPostElement = element.select("td > div:has(span.time)");
-            lastPost.setDate(lastPostElement.text().substring(0, lastPostElement.text().indexOf("by")));
-            VozUser lastPostAuthor = new VozUser();
-            lastPostAuthor.setUsername(lastPostElement.select("a[href^=member.php]").text());
-            lastPostAuthor.setUsername(lastPostElement.select("a[href^=member.php]").attr("href"));
-            lastPost.setHref(lastPostElement.select("a[href^=showthread]").attr("href"));
-            lastPost.setAuthor(lastPostAuthor);
-            thread.setLastPost(lastPost);
+            if (!lastPostElement.isEmpty()){
+                lastPost.setDate(lastPostElement.text().substring(0, lastPostElement.text()
+                        .indexOf("by")));
+                VozUser lastPostAuthor = new VozUser();
+                lastPostAuthor.setUsername(lastPostElement.select("a[href^=member.php]").text());
+                lastPostAuthor.setUsername(lastPostElement.select("a[href^=member.php]").attr("href"));
+                lastPost.setHref(lastPostElement.select("a[href^=showthread]").attr("href"));
+                lastPost.setAuthor(lastPostAuthor);
+                thread.setLastPost(lastPost);
+            } else {
+                thread.setLastPost(new VozPost());
+            }
             String rate = element.select("img.inlineimg[src^=images/rating]").attr("src");
             pattern = Pattern.compile("(\\d+)");
             if (rate != null && !rate.equals("")) {
@@ -162,19 +175,29 @@ public class VozDataRepositoryImpl implements VozDataRepository {
             }
             forum.getThreads().add(thread);
         }
-        Elements pageElements = doc.select("div.pagenav > table > tbody > tr > td[class~=(alt1|alt2)]");
+        Elements pageElements = doc.select("div.pagenav > table > tbody >" +
+                " tr > td[class~=(alt1|alt2)]");
         for (int i = 0; i < pageElements.size() / 2; i++) {
             if (pageElements.get(i).className().equals("alt1")) {
-                forum.getPages().add(new VozBase(pageElements.get(i).child(0).text(), pageElements.get(i).child(0).attr("href")));
+                forum.getPages().add(new VozBase(pageElements.get(i).child(0).text(),
+                        pageElements.get(i).child(0).attr("href")));
             } else {
                 forum.getPages().add(new VozBase(pageElements.get(i).child(0).text()));
             }
         }
+        try {
+            forum.setNextPage(Constants.BASE_URL + doc.select("a[rel=next]").first().attr("href"));
+        } catch (NullPointerException exception) {
+            forum.setNextPage(null);
+        }
+
         return forum;
     }
 
-    private  String shortenLargeNumber(String num) {
+    private String shortenLargeNumber(String num) {
         String t = num.replaceAll("\\D", "");
+        if (t.length() == 0)
+            t = "0";
         int res = Integer.parseInt(t);
         if (res > 1000000000) {
             return res / 1000000000 + "B";

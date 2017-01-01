@@ -32,4 +32,8 @@ public class VozApplication extends Application {
         return mApplicationComponent;
 
     }
+
+    public void setApplicationComponent(ApplicationComponent applicationComponent) {
+        mApplicationComponent = applicationComponent;
+    }
 }
