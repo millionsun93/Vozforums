@@ -5,17 +5,10 @@ package com.quanlt.vozforums.ui.base;
  */
 public interface BaseMvpView extends MvpView {
 
-    void createProgressDialog();
+    void showLoading();
 
-    void createAlertDialog();
+    void hideLoading();
 
-    void showProgressDialog(boolean value);
-
-    void showAlertDialog(String errorMessage);
-
-    void dismissDialog();
-
-
-
+    void showError(String message);
 
 }

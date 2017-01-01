@@ -24,17 +24,14 @@ public abstract class BaseActivityWithDialog extends BaseActivity implements Bas
     }
 
 
-    @Override
     public void createProgressDialog() {
         progressDialog = InnovatubeUtils.createProgress(this, getString(R.string.title_dialog));
     }
 
-    @Override
     public void createAlertDialog() {
         alertDialog = InnovatubeUtils.createAlertDialog(this, getString(R.string.title_dialog));
     }
 
-    @Override
     public void showProgressDialog(boolean value) {
         if (value) {
             progressDialog.show();
@@ -43,13 +40,11 @@ public abstract class BaseActivityWithDialog extends BaseActivity implements Bas
         }
     }
 
-    @Override
     public void showAlertDialog(String errorMessage) {
         alertDialog.setContent(errorMessage);
         alertDialog.show();
     }
 
-    @Override
     public void dismissDialog() {
         if (progressDialog != null && progressDialog.isShowing()) {
             alertDialog.dismiss();
