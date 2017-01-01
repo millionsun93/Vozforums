@@ -24,4 +24,5 @@ ext{
     daggerMockVersion = "0.6.2"
     dexMakerVersion = "1.2"
     rxVolleyVersion = "1.1.4"
+    jsoupVersion = "1.10.1"
 }

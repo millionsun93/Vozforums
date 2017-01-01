@@ -34,6 +34,7 @@ dependencies {
 
     compile "com.kymjs.rxvolley:okhttp3:${rxVolleyVersion}"
 
+    compile "org.jsoup:jsoup:${jsoupVersion}"
 
 
     //rxjava and rxandroid
@@ -49,8 +50,23 @@ dependencies {
     compile "com.google.dagger:dagger:${daggerVersion}"
     provided "javax.annotation:jsr250-api:1.0"
 
-    testCompile 'junit:junit:4.12'
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    testCompile "junit:junit:${jUnit4Version}"
+    testCompile "org.mockito:mockito-core:${mockitoVersion}"
+    testCompile "org.powermock:powermock-module-junit4:${powerMockVersion}"
+    testCompile "org.powermock:powermock-api-mockito:${powerMockVersion}"
+
+    androidTestCompile "com.google.dexmaker:dexmaker:${dexMakerVersion}"
+    androidTestCompile "com.google.dexmaker:dexmaker-mockito:${dexMakerVersion}"
+    androidTestCompile "com.android.support.test:runner:${testRunnerVersion}"
+    androidTestCompile "com.android.support.test:rules:${testRunnerVersion}"
+    androidTestCompile "com.android.support.test.espresso:espresso-intents:${espressoVersion}"
+    androidTestCompile "com.android.support.test.espresso:espresso-core:${espressoVersion}"
+    androidTestCompile("com.android.support.test.espresso:espresso-contrib:${espressoVersion}") {
+        exclude module: 'support-annotations'
+        exclude module: 'recyclerview-v7'
+        exclude module: 'support-v4'
+        exclude group: 'com.android.support'
+    }
+    androidTestCompile "com.github.fabioCollini:DaggerMock:${daggerMockVersion}"
+    androidTestCompile "com.android.support:support-annotations:${supportLibraryVersion}"
 }
